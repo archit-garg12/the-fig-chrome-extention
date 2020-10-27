@@ -16,6 +16,7 @@ changeColor.onclick = function(element) {
     let url = tabs[0].url;
     console.log(url);
     console.log("hello");
+    console.log("test branch");
     // use url here inside the callback because it's asynchronous!
   });
   // let color = element.target.value;
