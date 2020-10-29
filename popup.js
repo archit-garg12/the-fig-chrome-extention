@@ -4,47 +4,28 @@
 
 'use strict';
 
-let changeColor = document.getElementById('changeColor');
+chrome.runtime.onMessage.addListener(function(request, sender) {
+  console.log(request.action);
 
-chrome.storage.sync.get('color', function(data) {
-  changeColor.style.backgroundColor = data.color;
-  changeColor.setAttribute('value', data.color);
+  
+  if (request.action == "getSource") {
+    message.innerText = request.source;
+  }
 });
 
-changeColor.onclick = function(element) {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    let url = tabs[0].url;
-    console.log(url);
+function onWindowLoad() {
 
-    fetch(url).then(function(html)
-    {
-        html.text().then(function(text) 
-        {
-            console.log(text);
-            let re = new RegExp('<link rel="canonical".*', 'g');
-            let link   = text.match(re)[0];
-            link = link.split(" ")[2].split("/")[3];
-            console.log(link);
-        });
-      
-        
-        
-    });
-    
-   
-    // use url here inside the callback because it's asynchronous!
+  var message = document.querySelector('#message');
+
+  chrome.tabs.executeScript(null, {
+    file: "getPagesSource.js"
+  }, function() {
+    // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+    if (chrome.runtime.lastError) {
+      message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+    }
   });
-  // let color = element.target.value;
-  // chrome.tabs.query({active: true, currentWindow: true, lastFocusedWindow: true}, function(tabs) {
-  //   chrome.tabs.executeScript(
-  //       tabs[0].id,
-  //       {code: 'document.body.style.backgroundColor = "' + color + '";'}, function() {
-  //       });
-  // });
-};
 
-async function test(){
-    const response = await fetch(url);
-    const text = await response.text();
- 
-};
+}
+
+window.onload = onWindowLoad;
