@@ -1,36 +1,18 @@
 // @author Rob W <http://stackoverflow.com/users/938089/rob-w>
 // Demo: var serialized_html = DOMtoString(document);
 
+import stemmer from './stemmer.js';
+
 function DOMtoString(document_root) {
-  var btn = document.createElement("BUTTON")
-  var t = document.createTextNode("CLICK ME");
-  btn.appendChild(t);
-  //Appending to DOM 
-  document.body.appendChild(btn);
-    return document_root.documentElement.outerHTML
-    var html = '',
-        node = document_root.firstChild;
-    while (node) {
-        switch (node.nodeType) {
-        case Node.ELEMENT_NODE:
-            html += node.outerHTML;
-            break;
-        case Node.TEXT_NODE:
-            html += node.nodeValue;
-            break;
-        case Node.CDATA_SECTION_NODE:
-            html += '<![CDATA[' + node.nodeValue + ']]>';
-            break;
-        case Node.COMMENT_NODE:
-            html += '<!--' + node.nodeValue + '-->';
-            break;
-        case Node.DOCUMENT_TYPE_NODE:
-            // (X)HTML documents are identified by public identifiers
-            html += "<!DOCTYPE " + node.name + (node.publicId ? ' PUBLIC "' + node.publicId + '"' : '') + (!node.publicId && node.systemId ? ' SYSTEM' : '') + (node.systemId ? ' "' + node.systemId + '"' : '') + '>\n';
-            break;
-        }
-        node = node.nextSibling;
-    }
+    var btn = document.createElement("BUTTON")
+    var t = document.createTextNode("CLICK ME");
+    btn.appendChild(t);
+    //Appending to DOM 
+    document.body.appendChild(btn);
+    let html = document_root.documentElement.outerHTML
+    // html.split(' ')
+    let f = stemmer()
+    console.log(f("swimming"));
     return html;
 }
 
