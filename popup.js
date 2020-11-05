@@ -204,51 +204,75 @@ function getTags(callback) {
     xhr.send();
 }
 
-function stemTags(tags) {
-  let finalTagList = [];
+function stemTags(tags, stemmedSource) {
+  let finalTagList = {};
+  let stemToReal = {};
   for (let i = 0; i < tags.length; i++) {
-      finalTagList.push(stemmer(tags[i]));
+    finalTagList[stemmer(tags[i]).toLowerCase()] = 0;
+    stemToReal[stemmer(tags[i]).toLowerCase()] = tags[i];
   }
-  console.log(finalTagList);
-}
+  for (let i = 0; i < stemmedSource.length; i++) {
+    // if (stemmedSource[i] == "lotion") {
+    //   console.log("@@@@@@@@@@@@@@&&&&@&@&@&@&&@&@&@&");
+    // }
+    let lowerTag = stemmedSource[i].toLowerCase()
+    if (finalTagList[lowerTag] != undefined) {
+      finalTagList[lowerTag] += 1;
+    }
+  }
+  let items = Object.keys(finalTagList).map(function(key) {
+    return [stemToReal[key], finalTagList[key]];
+  });
+  // Sort the array based on the second element
+  items.sort(function(first, second) {
+    return second[1] - first[1];
+  });
+
+  let tagsToSend = [];
+  let firstFive = items.slice(0, 1);
+  for (let i = 0; i < firstFive.length; i++) {
+    tagsToSend.push(firstFive[i][0]);
+  }
+
+  console.log(JSON.stringify(tagsToSend));
+
+  // Set up our HTTP request
+  var xhr = new XMLHttpRequest();
+
+  // Setup our listener to process completed requests
+  xhr.onload = function () {
+
+      // Process our return data
+      if (xhr.status >= 200 && xhr.status < 300) {
+          // What do when the request is successful
+          let productList = JSON.parse(xhr.responseText);
+          let finalList = [];
+          for (let i = 0; i < productList.length; i++) {
+            finalList.push(productList[i]["title"])
+          }
+          message.innerText = finalList;
+      } else {
+          // What do when the request fails
+      }
+
+  };
+  // Create and send a GET request
+  // The first argument is the post type (GET, POST, PUT, DELETE, etc.)
+  // The second argument is the endpoint URL
+  xhr.open('POST', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/allProducts');
+  xhr.setRequestHeader("Content-type", "application/json");
+  xhr.send(JSON.stringify({tags: tagsToSend}));
+} 
 
 chrome.runtime.onMessage.addListener(function(request, sender) {
   console.log(request.action);
-  console.log(request.stemmertest);
+  console.log(request.stemmedSource);
   console.log(request.tagList);
-  // console.log(request.source);
-  getTags(data => stemTags(data["tags"]))
-
-
-  // Set up our HTTP request
-  // var xhr = new XMLHttpRequest();
-
-  // // Setup our listener to process completed requests
-  // xhr.onload = function () {
-
-  //     // Process our return data
-  //     if (xhr.status >= 200 && xhr.status < 300) {
-  //         // What do when the request is successful
-  //         console.log('success!', xhr);
-  //     } else {
-  //         // What do when the request fails
-  //         console.log('The request failed!');
-  //     }
-
-  //     // Code that should run regardless of the request status
-  //     console.log('This always runs...');
-  // };
-  // // Create and send a GET request
-  // // The first argument is the post type (GET, POST, PUT, DELETE, etc.)
-  // // The second argument is the endpoint URL
-  // xhr.open('GET', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/allTags');
-  // xhr.send();
-
-  // console.log(request.source);
-
+  console.log(request.source);
+  getTags(data => stemTags(data["tags"], request.stemmedSource))
   
   if (request.action == "getSource") {
-    message.innerText = request.source;
+    // message.innerText = request.source;
   }
 });
 
