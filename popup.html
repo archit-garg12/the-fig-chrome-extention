@@ -1,9 +1,113 @@
 <!DOCTYPE html>
-<html style=''>
+<style>
+html {
+  width:550px; 
+  height:600px; 
+  background-color: #0c5740; 
+}
+
+.title {
+  margin-top: -4px; 
+  width:535px; 
+  height:100px; 
+  background-color: white; 
+  display: block; 
+  margin-left: auto; 
+  margin-right: auto; 
+  border-radius: 5px;
+}
+
+.productBody {
+  margin-top: 5px; 
+  width:535px; 
+  height:480px; 
+  background-color: white; 
+  display: block; 
+  margin-left: auto; 
+  margin-right: auto; 
+  border-radius: 5px;
+}
+
+.productTagDiv{
+  width: 200px;
+  height: 500px;
+  float: right; 
+  margin-top: 5%;
+}
+
+.productTags{
+  width: 150px; 
+  height: 50px; 
+  background-color: #ededed; 
+  border-radius: 5px;
+  line-height: 50px;
+  text-align: center;
+}
+
+.productTags p {
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+button {
+  margin-top: 100px;
+  width: 150px; 
+  height: 50px; 
+  border-radius: 5px;
+  line-height: 50px;
+  text-align: center;
+  color: white;
+  background-color: #0c5740;
+  font-size: 24px;
+}
+
+a {
+  padding-top: 100px;
+  width: 150px; 
+  height: 100px; 
+  font-size: 12px;
+}
+
+.circle {
+  border-radius: 50%;
+  margin-top: 7%;
+  margin-left: 10%;
+  width:200px; 
+  height:200px; 
+  background-color: #0c5740; 
+  display: inline-block; 
+  float: left;
+}
+
+</style>
+<html>
 <head>
+
 <script src='popup.js' type='module'></script>
 </head>
-<body style="width:400px;">
-<div id='message'>Injecting Script....</div>
+
+<body>
+  <div class="title">
+    <p id = "message"/>
+
+  </div>
+  <div class="productBody">
+    <div class = "circle"></div>
+    <div class="productTagDiv">
+      <div class = "productTags">
+        <p>Certified B Corp</p>
+      </div>
+      <div class = "productTags">
+        <p>Fair Trade</p>
+      </div>
+      <div class = "productTags">
+        <p>Plastic Free</p>
+      </div>
+      <button>FIG IT</button>
+      <a target="_blank" href="https://www.linkedin.com/in/krish-avvari-41769a169/">Click for More!</a>
+
+    </div>
+
+  </div>
 </body>
 </html>
