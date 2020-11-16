@@ -204,22 +204,46 @@ function getTags(callback) {
     xhr.send();
 }
 
-function stemTags(tags, stemmedSource) {
+function getProductFigScores(products)
+{
+	let productIds = products.map(p => p.id);
+	var xhr = new XMLHttpRequest();
+	xhr.onload = function () {
+
+		// Process our return data
+		if (xhr.status >= 200 && xhr.status < 300) {
+			let figScores = JSON.parse(xhr.responseText);
+			message.innerText = JSON.stringify(figScores);	
+			console.log(figScores);		
+		} else {
+			console.log("hoe")
+		}
+  
+	};
+	// Create and send a GET request
+	// The first argument is the post type (GET, POST, PUT, DELETE, etc.)
+	// The second argument is the endpoint URL
+	xhr.open('POST', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/score');
+	xhr.setRequestHeader("Content-type", "application/json");
+	xhr.send(JSON.stringify({idList: productIds }));
+}
+function stemTags(tags, stemmedSource, callback) {
   let finalTagList = {};
   let stemToReal = {};
+
   for (let i = 0; i < tags.length; i++) {
-    finalTagList[stemmer(tags[i]).toLowerCase()] = 0;
-    stemToReal[stemmer(tags[i]).toLowerCase()] = tags[i];
+	let splitTags = tags[i].split("_");
+    finalTagList[stemmer(splitTags.length > 1 ? splitTags[1] : tags[i]).toLowerCase()] = 0;
+    stemToReal[stemmer(splitTags.length > 1 ? splitTags[1] : tags[i]).toLowerCase()] = tags[i];
   }
   for (let i = 0; i < stemmedSource.length; i++) {
-    // if (stemmedSource[i] == "lotion") {
-    //   console.log("@@@@@@@@@@@@@@&&&&@&@&@&@&&@&@&@&");
-    // }
     let lowerTag = stemmedSource[i].toLowerCase()
     if (finalTagList[lowerTag] != undefined) {
       finalTagList[lowerTag] += 1;
     }
   }
+  console.log(finalTagList);
+
   let items = Object.keys(finalTagList).map(function(key) {
     return [stemToReal[key], finalTagList[key]];
   });
@@ -228,13 +252,13 @@ function stemTags(tags, stemmedSource) {
     return second[1] - first[1];
   });
 
+  console.log(items);
   let tagsToSend = [];
   let firstFive = items.slice(0, 1);
   for (let i = 0; i < firstFive.length; i++) {
     tagsToSend.push(firstFive[i][0]);
   }
-
-  console.log(JSON.stringify(tagsToSend));
+  console.log()
 
   // Set up our HTTP request
   var xhr = new XMLHttpRequest();
@@ -248,11 +272,12 @@ function stemTags(tags, stemmedSource) {
           let productList = JSON.parse(xhr.responseText);
           let finalList = [];
           for (let i = 0; i < productList.length; i++) {
-            finalList.push(productList[i]["title"])
-          }
-          message.innerText = finalList;
+            finalList.push(productList[i])
+		  }
+		  console.log(finalList)
+          callback(finalList)
       } else {
-          // What do when the request fails
+          console.log("hoe")
       }
 
   };
@@ -269,7 +294,7 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
   console.log(request.stemmedSource);
   console.log(request.tagList);
   console.log(request.source);
-  getTags(data => stemTags(data["tags"], request.stemmedSource))
+  getTags(data => stemTags(data["tags"], request.stemmedSource, data => getProductFigScores(data)))
   
   if (request.action == "getSource") {
     // message.innerText = request.source;
