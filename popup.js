@@ -248,7 +248,7 @@ function getProductFigScores(products)
 			console.log(product);
 
 		} else {
-			console.log("hoe")
+			console.log("test")
 		}
   
 	};
