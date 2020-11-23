@@ -213,8 +213,40 @@ function getProductFigScores(products)
 		// Process our return data
 		if (xhr.status >= 200 && xhr.status < 300) {
 			let figScores = JSON.parse(xhr.responseText);
-			message.innerText = JSON.stringify(figScores);	
-			console.log(figScores);		
+			
+			console.log(products);
+			console.log(figScores["scores"]);
+		  	let items = Object.keys(figScores["scores"]).map(function(key) {
+    			return [key, figScores["scores"][key]["scores"]["ethicScore"]];
+  			});
+			// Sort the array based on the second element
+			items.sort(function(first, second) {
+				return second[1] - first[1];
+			});	
+			
+			
+			console.log(items[0][0]);
+			var product;
+			for (var i = 0; i < products.length; i++){
+				if (products[i]["id"] == parseInt(items[0][0])){
+					product = products[i];
+					break;
+				}
+			}
+
+			if (items.length > 0){
+				message.innerText = product["title"];
+				vendor.innerText = "Sold By: " + product["vendor"];
+				productScore.innerText = "Fig Score: " + items[0][1].toFixed(2);
+				productPrice.innerText = "Price: $" + product["variants"][0]["price"];
+			}
+			else{
+				message.innerText = "";
+				vendor.innerText = "";
+			}
+			// console.log(products[parseInt(items[0][0])]);
+			console.log(product);
+
 		} else {
 			console.log("hoe")
 		}
@@ -227,6 +259,12 @@ function getProductFigScores(products)
 	xhr.setRequestHeader("Content-type", "application/json");
 	xhr.send(JSON.stringify({idList: productIds }));
 }
+
+function button(){
+	console.log("tasdfasdf");
+}
+
+
 function stemTags(tags, stemmedSource, callback) {
   let finalTagList = {};
   let stemToReal = {};
@@ -304,6 +342,10 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 function onWindowLoad() {
 
   var message = document.querySelector('#message');
+  var vendor = document.querySelector('#vendor');
+  var productScore = document.querySelector('#productScore');
+  var productDescription = document.querySelector('#productDescription');
+  var productPrice = document.querySelector('#productPrice');
 
   chrome.tabs.executeScript(null, {
     file: "getPagesSource.js"

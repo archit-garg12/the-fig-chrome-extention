@@ -33,6 +33,7 @@ html {
   height: 500px;
   float: right; 
   margin-top: 5%;
+  margin-left: 50px;
 }
 
 .productTags{
@@ -62,9 +63,6 @@ button {
 }
 
 a {
-  padding-top: 100px;
-  width: 150px; 
-  height: 100px; 
   font-size: 12px;
 }
 
@@ -79,6 +77,41 @@ a {
   float: left;
 }
 
+.productName {
+  font-size: 24px;
+  padding-top: 8px;
+  margin-top: 10px;
+  margin-bottom: -8px;
+  padding-left: 10px;
+}
+
+.productPrice {
+  font-size: 16px;
+  padding-left: 10px;
+}
+
+.productVendor {
+  font-size: 12px;
+  padding-left: 10px;
+}
+
+.alignA{
+  margin-left: 35px;
+  margin-top: 3px;
+}
+
+a {
+  margin-top: -50px;
+}
+
+<script>
+
+function myFunction(){
+  console.log("asdfsadf");
+}
+
+</style>
+
 </style>
 <html>
 <head>
@@ -88,14 +121,16 @@ a {
 
 <body>
   <div class="title">
-    <p id = "message"/>
+    <p class  = "productName" id = "message"/>
+    <p class = "productVendor" id = "vendor"/>
+    <p class = "productPrice" id = "productPrice"/>
 
   </div>
   <div class="productBody">
     <div class = "circle"></div>
     <div class="productTagDiv">
       <div class = "productTags">
-        <p>Certified B Corp</p>
+        <p id = "productScore"/>
       </div>
       <div class = "productTags">
         <p>Fair Trade</p>
@@ -103,9 +138,10 @@ a {
       <div class = "productTags">
         <p>Plastic Free</p>
       </div>
-      <button>FIG IT</button>
-      <a target="_blank" href="https://www.linkedin.com/in/krish-avvari-41769a169/">Click for More!</a>
-
+      <button onclick="button">FIG IT</button>
+      <div class = "alignA">
+        <a target="_blank" href="https://www.linkedin.com/in/krish-avvari-41769a169/">Click for More!</a>
+      </div>
     </div>
 
   </div>
