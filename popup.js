@@ -288,7 +288,7 @@ function getProductFigScores(products, callback)
 
 			if (items.length > 0){
 				message.innerText = product["title"];
-				url = "https://thefutureisgood.co/products/" + product["title"].split(" ").join('-');
+				url = "https://thefutureisgood.co/products/" + product["handle"];
 				console.log(url);
 				vendor.innerText = "Sold By: " + product["vendor"];
 				productPrice.innerText = "Price: $" + product["variants"][0]["price"];
