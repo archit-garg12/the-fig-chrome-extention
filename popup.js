@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 'use strict';
-
+var url = "";
 var stemmer = (function(){
 	var step2list = {
 			"ational" : "ate",
@@ -180,6 +180,13 @@ var stemmer = (function(){
 	}
 })();
 
+document.addEventListener('DOMContentLoaded', function() {
+    var link = document.getElementById('myButton');
+    link.addEventListener('click', function() {
+        window.open(url);
+    });
+});
+
 function getTags(callback) {
     // Set up our HTTP request
     var xhr = new XMLHttpRequest();
@@ -204,7 +211,52 @@ function getTags(callback) {
     xhr.send();
 }
 
-function getProductFigScores(products)
+// function getProductInfo(products, callback){
+
+// }
+
+function getBars(productId){
+
+	var barStyle = new XMLHttpRequest();
+
+	barStyle.onload = function(){
+
+		if (barStyle.status >= 200 && barStyle.status < 300){
+
+			let styles = JSON.parse(barStyle.responseText);
+			console.log(styles);
+
+			for (const catKey of Object.keys(styles.scores.normalizedScore)) {
+				const doesNotApply = '<p style="font-size: 14px;font-weight:500;">This Category Does Not Apply To This Product</p>'
+				if (styles.scores.possibleScore[catKey] == 0) {
+				// TODO: Make this a NA somehow
+				// $(doesNotApply).insertAfter(`.${catKey}-container p`)
+				// $(`.${catKey}-container .score-progress-bar-normal`).css('display', 'none')
+				// cnosole.log("ASDFASDFSDAF");
+				} else {
+					let myElement = document.getElementsByClassName(catKey + "-greenbar")[0];
+					let numString = Math.floor(styles.scores.defaultScore[catKey] / styles.scores.possibleScore[catKey] * 100).toString() + "%";
+					myElement.style.width = numString;
+				}
+
+
+			}
+
+			let myElement = document.getElementsByClassName("avg-greenbar")[0];
+			console.log(JSON.stringify(styles["ethicGrade"]));
+			console.log(styles);
+			let numString = Math.floor(styles["scores"]["ethicScore"] / 100 * 100).toString() + "%";
+			myElement.style.width = numString;
+
+		}
+	};
+
+	barStyle.open('GET', 'https://ethic-scoring-server.herokuapp.com/api/shopifyproduct/score/' + productId);
+	barStyle.setRequestHeader("Content-type", "application/json");
+	barStyle.send();
+}
+
+function getProductFigScores(products, callback)
 {
 	let productIds = products.map(p => p.id);
 	var xhr = new XMLHttpRequest();
@@ -236,9 +288,13 @@ function getProductFigScores(products)
 
 			if (items.length > 0){
 				message.innerText = product["title"];
+				url = "https://thefutureisgood.co/products/" + product["title"].split(" ").join('-');
+				console.log(url);
 				vendor.innerText = "Sold By: " + product["vendor"];
-				productScore.innerText = "Fig Score: " + items[0][1].toFixed(2);
 				productPrice.innerText = "Price: $" + product["variants"][0]["price"];
+				callback(product["id"].toString());
+				
+			      
 			}
 			else{
 				message.innerText = "";
@@ -252,12 +308,40 @@ function getProductFigScores(products)
 		}
   
 	};
-	// Create and send a GET request
-	// The first argument is the post type (GET, POST, PUT, DELETE, etc.)
-	// The second argument is the endpoint URL
+
 	xhr.open('POST', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/score');
 	xhr.setRequestHeader("Content-type", "application/json");
 	xhr.send(JSON.stringify({idList: productIds }));
+	
+
+	
+		// method: 'GET',
+		// 	      url: 'https://ethic-scoring-server.herokuapp.com/api/shopifyproduct/score/4618233184321',
+		// 	      accepts: 'application/json',
+		// 	      success: res => {
+		// 	        console.log("asdfsadf");
+		// 	        document.getElementById("vendor").innerText = res;
+		// 	        const doesNotApply = '<p style="font-size: 14px;font-weight:500;">This Category Does Not Apply To This Product</p>'
+		// 	        $('.avg-greenbar').css('width', `${Math.floor(res.scores.ethicScore)}%`)
+			        // for (const catKey of Object.keys(res.scores.normalizedScore)) {
+			        //   if (res.scores.possibleScore[catKey] == 0) {
+			        //     // TODO: Make this a NA somehow
+			        //     $(doesNotApply).insertAfter(`.${catKey}-container p`)
+			        //     $(`.${catKey}-container .score-progress-bar-normal`).css('display', 'none')
+			        //     cnosole.log("ASDFASDFSDAF");
+			        //   } else {
+			        //     $(`.${catKey}-greenbar`).css('width', `${Math.floor(res.scores.defaultScore[catKey] / res.scores.possibleScore[catKey] * 100)}%`)
+			        //     console.log("WER");
+		// 	          } 
+  //       			}
+  //     			}
+    		
+	// Create and send a GET request
+	// The first argument is the post type (GET, POST, PUT, DELETE, etc.)
+	// The second argument is the endpoint URL
+	
+	
+
 }
 
 function button(){
@@ -332,7 +416,7 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
   console.log(request.stemmedSource);
   console.log(request.tagList);
   console.log(request.source);
-  getTags(data => stemTags(data["tags"], request.stemmedSource, data => getProductFigScores(data)))
+  getTags(data => stemTags(data["tags"], request.stemmedSource, data => getProductFigScores(data, data => getBars(data))))
   
   if (request.action == "getSource") {
     // message.innerText = request.source;
@@ -346,6 +430,7 @@ function onWindowLoad() {
   var productScore = document.querySelector('#productScore');
   var productDescription = document.querySelector('#productDescription');
   var productPrice = document.querySelector('#productPrice');
+  var myBtn = document.querySelector('#myBtn');
 
   chrome.tabs.executeScript(null, {
     file: "getPagesSource.js"
