@@ -1,6 +1,6 @@
 {
   "name": "Getting Started Example",
-  "version": "1.0",
+  "version": "11.0",
   "description": "Build an Extension!",
   "permissions": ["activeTab", "declarativeContent", "storage", "tabs", "<all_urls>"],
   "options_page": "options.html",
@@ -8,6 +8,10 @@
     "scripts": ["background.js"],
     "persistent": false
   },
+  "content_scripts": [{
+    "matches":["https://*.amazon.com/*"],
+    "js": ["getPagesSourceBundle.js"]
+  }],
   "page_action": {
     "default_popup": "popup.html",
     "default_icon": {

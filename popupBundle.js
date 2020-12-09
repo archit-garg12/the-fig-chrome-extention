@@ -180,158 +180,72 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function getTags(callback) {
-    // Set up our HTTP request
-    var xhr = new XMLHttpRequest();
+// function getTags(callback) {
+//     // Set up our HTTP request
+//     var xhr = new XMLHttpRequest();
 
-    // Setup our listener to process completed requests
-    xhr.onload = function () {
+//     // Setup our listener to process completed requests
+//     xhr.onload = function () {
 
-        // Process our return data
-        if (xhr.status >= 200 && xhr.status < 300) {
-            // What do when the request is successful
-            callback(JSON.parse(xhr.responseText));
-        } else {
-            // What do when the request fails
-            console.log('The request failed!');
-        }
+//         // Process our return data
+//         if (xhr.status >= 200 && xhr.status < 300) {
+//             // What do when the request is successful
+//             callback(JSON.parse(xhr.responseText));
+//         } else {
+//             // What do when the request fails
+//             console.log('The request failed!');
+//         }
 
-    };
-    // Create and send a GET request
-    // The first argument is the post type (GET, POST, PUT, DELETE, etc.)
-    // The second argument is the endpoint URL
-    xhr.open('GET', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/allTags');
-    xhr.send();
-}
+//     };
+//     // Create and send a GET request
+//     // The first argument is the post type (GET, POST, PUT, DELETE, etc.)
+//     // The second argument is the endpoint URL
+//     xhr.open('GET', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/allTags');
+//     xhr.send();
+// }
 
-function getBars(productId){
+// function getBars(productId){
 
-	var barStyle = new XMLHttpRequest();
+// 	var barStyle = new XMLHttpRequest();
 
-	barStyle.onload = function(){
+// 	barStyle.onload = function(){
 
-		if (barStyle.status >= 200 && barStyle.status < 300){
+// 		if (barStyle.status >= 200 && barStyle.status < 300){
 
-			let styles = JSON.parse(barStyle.responseText);
-			console.log(styles);
+// 			let styles = JSON.parse(barStyle.responseText);
+// 			console.log(styles);
 
-			for (const catKey of Object.keys(styles.scores.normalizedScore)) {
-				const doesNotApply = '<p style="font-size: 14px;font-weight:500;">This Category Does Not Apply To This Product</p>'
-				if (styles.scores.possibleScore[catKey] == 0) {
-				// TODO: Make this a NA somehow
-				// $(doesNotApply).insertAfter(`.${catKey}-container p`)
-				// $(`.${catKey}-container .score-progress-bar-normal`).css('display', 'none')
-				// cnosole.log("ASDFASDFSDAF");
-				} else {
-					let myElement = document.getElementsByClassName(catKey + "-greenbar")[0];
-					let numString = Math.floor(styles.scores.defaultScore[catKey] / styles.scores.possibleScore[catKey] * 100).toString() + "%";
-					myElement.style.width = numString;
-				}
+// 			for (const catKey of Object.keys(styles.scores.normalizedScore)) {
+// 				const doesNotApply = '<p style="font-size: 14px;font-weight:500;">This Category Does Not Apply To This Product</p>'
+// 				if (styles.scores.possibleScore[catKey] == 0) {
+// 				// TODO: Make this a NA somehow
+// 				// $(doesNotApply).insertAfter(`.${catKey}-container p`)
+// 				// $(`.${catKey}-container .score-progress-bar-normal`).css('display', 'none')
+// 				// cnosole.log("ASDFASDFSDAF");
+// 				} else {
+// 					let myElement = document.getElementsByClassName(catKey + "-greenbar")[0];
+// 					let numString = Math.floor(styles.scores.defaultScore[catKey] / styles.scores.possibleScore[catKey] * 100).toString() + "%";
+// 					myElement.style.width = numString;
+// 				}
 
 
-			}
+// 			}
 
-			let myElement = document.getElementsByClassName("avg-greenbar")[0];
-			console.log(JSON.stringify(styles["ethicGrade"]));
-			console.log(styles);
-			let numString = Math.floor(styles["scores"]["ethicScore"] / 100 * 100).toString() + "%";
-			myElement.style.width = numString;
+// 			let myElement = document.getElementsByClassName("avg-greenbar")[0];
+// 			console.log(JSON.stringify(styles["ethicGrade"]));
+// 			console.log(styles);
+// 			let numString = Math.floor(styles["scores"]["ethicScore"] / 100 * 100).toString() + "%";
+// 			myElement.style.width = numString;
 
-		}
-	};
+// 		}
+// 	};
 
-	barStyle.open('GET', 'https://ethic-scoring-server.herokuapp.com/api/shopifyproduct/score/' + productId);
-	barStyle.setRequestHeader("Content-type", "application/json");
-	barStyle.send();
-}
+// 	barStyle.open('GET', 'https://ethic-scoring-server.herokuapp.com/api/shopifyproduct/score/' + productId);
+// 	barStyle.setRequestHeader("Content-type", "application/json");
+// 	barStyle.send();
+// }
 
-function getProductFigScores(products, callback)
-{
-	let productIds = products.map(p => p.id);
-	var xhr = new XMLHttpRequest();
-	xhr.onload = function () {
-
-		// Process our return data
-		if (xhr.status >= 200 && xhr.status < 300) {
-			let figScores = JSON.parse(xhr.responseText);
-			
-			console.log(products);
-			console.log(figScores["scores"]);
-		  	let items = Object.keys(figScores["scores"]).map(function(key) {
-    			return [key, figScores["scores"][key]["scores"]["ethicScore"]];
-  			});
-			// Sort the array based on the second element
-			items.sort(function(first, second) {
-				return second[1] - first[1];
-			});	
-			
-			
-			console.log(items[0][0]);
-			var product;
-			for (var i = 0; i < products.length; i++){
-				if (products[i]["id"] == parseInt(items[0][0])){
-					product = products[i];
-					break;
-				}
-			}
-
-			if (items.length > 0){
-				message.innerText = product["title"];
-				url = "https://thefutureisgood.co/products/" + product["handle"];
-				console.log(url);
-				vendor.innerText = "Sold By: " + product["vendor"];
-				productPrice.innerText = "Price: $" + product["variants"][0]["price"];
-				callback(product["id"].toString());
-				
-			      
-			}
-			else{
-				message.innerText = "";
-				vendor.innerText = "";
-			}
-			// console.log(products[parseInt(items[0][0])]);
-			console.log(product);
-
-		} else {
-			console.log("test")
-		}
-  
-	};
-
-	xhr.open('POST', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/score');
-	xhr.setRequestHeader("Content-type", "application/json");
-	xhr.send(JSON.stringify({idList: productIds }));
-	
-
-	
-		// method: 'GET',
-		// 	      url: 'https://ethic-scoring-server.herokuapp.com/api/shopifyproduct/score/4618233184321',
-		// 	      accepts: 'application/json',
-		// 	      success: res => {
-		// 	        console.log("asdfsadf");
-		// 	        document.getElementById("vendor").innerText = res;
-		// 	        const doesNotApply = '<p style="font-size: 14px;font-weight:500;">This Category Does Not Apply To This Product</p>'
-		// 	        $('.avg-greenbar').css('width', `${Math.floor(res.scores.ethicScore)}%`)
-			        // for (const catKey of Object.keys(res.scores.normalizedScore)) {
-			        //   if (res.scores.possibleScore[catKey] == 0) {
-			        //     // TODO: Make this a NA somehow
-			        //     $(doesNotApply).insertAfter(`.${catKey}-container p`)
-			        //     $(`.${catKey}-container .score-progress-bar-normal`).css('display', 'none')
-			        //     cnosole.log("ASDFASDFSDAF");
-			        //   } else {
-			        //     $(`.${catKey}-greenbar`).css('width', `${Math.floor(res.scores.defaultScore[catKey] / res.scores.possibleScore[catKey] * 100)}%`)
-			        //     console.log("WER");
-		// 	          } 
-  //       			}
-  //     			}
-    		
-	// Create and send a GET request
-	// The first argument is the post type (GET, POST, PUT, DELETE, etc.)
-	// The second argument is the endpoint URL
-	
-	
-
-}
+// function getProductFigScores(products, callback)
 // {
 // 	let productIds = products.map(p => p.id);
 // 	var xhr = new XMLHttpRequest();
@@ -363,9 +277,13 @@ function getProductFigScores(products, callback)
 
 // 			if (items.length > 0){
 // 				message.innerText = product["title"];
+// 				url = "https://thefutureisgood.co/products/" + product["handle"];
+// 				console.log(url);
 // 				vendor.innerText = "Sold By: " + product["vendor"];
-// 				productScore.innerText = "Fig Score: " + items[0][1].toFixed(2);
 // 				productPrice.innerText = "Price: $" + product["variants"][0]["price"];
+// 				callback(product["id"].toString());
+				
+			      
 // 			}
 // 			else{
 // 				message.innerText = "";
@@ -379,178 +297,276 @@ function getProductFigScores(products, callback)
 // 		}
   
 // 	};
-// 	// Create and send a GET request
-// 	// The first argument is the post type (GET, POST, PUT, DELETE, etc.)
-// 	// The second argument is the endpoint URL
+
 // 	xhr.open('POST', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/score');
 // 	xhr.setRequestHeader("Content-type", "application/json");
 // 	xhr.send(JSON.stringify({idList: productIds }));
+	
+
+	
+// 		// method: 'GET',
+// 		// 	      url: 'https://ethic-scoring-server.herokuapp.com/api/shopifyproduct/score/4618233184321',
+// 		// 	      accepts: 'application/json',
+// 		// 	      success: res => {
+// 		// 	        console.log("asdfsadf");
+// 		// 	        document.getElementById("vendor").innerText = res;
+// 		// 	        const doesNotApply = '<p style="font-size: 14px;font-weight:500;">This Category Does Not Apply To This Product</p>'
+// 		// 	        $('.avg-greenbar').css('width', `${Math.floor(res.scores.ethicScore)}%`)
+// 			        // for (const catKey of Object.keys(res.scores.normalizedScore)) {
+// 			        //   if (res.scores.possibleScore[catKey] == 0) {
+// 			        //     // TODO: Make this a NA somehow
+// 			        //     $(doesNotApply).insertAfter(`.${catKey}-container p`)
+// 			        //     $(`.${catKey}-container .score-progress-bar-normal`).css('display', 'none')
+// 			        //     cnosole.log("ASDFASDFSDAF");
+// 			        //   } else {
+// 			        //     $(`.${catKey}-greenbar`).css('width', `${Math.floor(res.scores.defaultScore[catKey] / res.scores.possibleScore[catKey] * 100)}%`)
+// 			        //     console.log("WER");
+// 		// 	          } 
+//   //       			}
+//   //     			}
+    		
+// 	// Create and send a GET request
+// 	// The first argument is the post type (GET, POST, PUT, DELETE, etc.)
+// 	// The second argument is the endpoint URL
+	
+	
+
+// }
+// // {
+// // 	let productIds = products.map(p => p.id);
+// // 	var xhr = new XMLHttpRequest();
+// // 	xhr.onload = function () {
+
+// // 		// Process our return data
+// // 		if (xhr.status >= 200 && xhr.status < 300) {
+// // 			let figScores = JSON.parse(xhr.responseText);
+			
+// // 			console.log(products);
+// // 			console.log(figScores["scores"]);
+// // 		  	let items = Object.keys(figScores["scores"]).map(function(key) {
+// //     			return [key, figScores["scores"][key]["scores"]["ethicScore"]];
+// //   			});
+// // 			// Sort the array based on the second element
+// // 			items.sort(function(first, second) {
+// // 				return second[1] - first[1];
+// // 			});	
+			
+			
+// // 			console.log(items[0][0]);
+// // 			var product;
+// // 			for (var i = 0; i < products.length; i++){
+// // 				if (products[i]["id"] == parseInt(items[0][0])){
+// // 					product = products[i];
+// // 					break;
+// // 				}
+// // 			}
+
+// // 			if (items.length > 0){
+// // 				message.innerText = product["title"];
+// // 				vendor.innerText = "Sold By: " + product["vendor"];
+// // 				productScore.innerText = "Fig Score: " + items[0][1].toFixed(2);
+// // 				productPrice.innerText = "Price: $" + product["variants"][0]["price"];
+// // 			}
+// // 			else{
+// // 				message.innerText = "";
+// // 				vendor.innerText = "";
+// // 			}
+// // 			// console.log(products[parseInt(items[0][0])]);
+// // 			console.log(product);
+
+// // 		} else {
+// // 			console.log("test")
+// // 		}
+  
+// // 	};
+// // 	// Create and send a GET request
+// // 	// The first argument is the post type (GET, POST, PUT, DELETE, etc.)
+// // 	// The second argument is the endpoint URL
+// // 	xhr.open('POST', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/score');
+// // 	xhr.setRequestHeader("Content-type", "application/json");
+// // 	xhr.send(JSON.stringify({idList: productIds }));
+// // }
+
+// function button(){
+// 	console.log("tasdfasdf");
 // }
 
-function button(){
-	console.log("tasdfasdf");
-}
 
+// function stemTags(tags, stemmedSource, callback) {
+//   let finalTagList = {};
+//   let stemToReal = {};
+//   let keywordToTagSplitBySpace = {};
+//   const STOP_WORDS = new Set(['which', 'my', 'all', "when's", 'the', "you'd", 'from', 'be', 'down', 'until', 'by', 'only', "we're",
+//               "couldn't", 'your', 'her', 'should', 'but', 'at', 'having', 'ours', 'doing', "who's", 'during', "i've",
+//               'those', 'as', 'myself', 'than', 'himself', "i'm", 'very', 'this', "we'd", 'them', 'ourselves', "doesn't",
+//               'is', "we'll", "what's", 'had', 'there', "there's", 'a', 'yours', "he's", 'with', "you'll", 'these', 'does',
+//               'into', 'not', "that's", "hadn't", "hasn't", "it's", 'she', "why's", 'me', 'against', 'yourselves', 'it',
+//               "you're", "he'll", "here's", 'further', 'in', 'own', "i'll", "shouldn't", "they've", "aren't", 'do', 'itself',
+//               "wasn't", 'then', "shan't", 'again', 'i', 'were', 'why', 'through', 'more', 'when', "where's", 'once', 'being',
+//               'who', "she'll", 'under', 'no', "can't", 'other', "they'll", 'they', 'below', "won't", 'each', 'themselves',
+//               'would', 'on', 'both', 'while', 'hers', 'herself', 'cannot', "she's", 'nor', 'over', 'where', 'you', "you've",
+//               "how's", 'up', 'how', 'ought', "they'd", 'am', 'what', 'whom', 'above', "i'd", "let's", 'their', 'him', 'after',
+//               'was', 'before', 'for', 'did', 'few', "we've", "she'd", 'to', 'because', 'an', 'and', 'he', 'same', 'theirs',
+//               'yourself', 'too', "don't", 'could', "wouldn't", "mustn't", 'so', 'such', 'its', 'here', 'are', 'off', 'out',
+//               "didn't", 'have', 'his', 'or', "isn't", 'that', 'of', 'our', 'we', 'has', 'if', 'between', 'most', 'some',
+//               "they're", "weren't", 'about', 'any', "haven't", "he'd", 'been', 'product'])
 
-function stemTags(tags, stemmedSource, callback) {
-  let finalTagList = {};
-  let stemToReal = {};
-  let keywordToTagSplitBySpace = {};
-  const STOP_WORDS = new Set(['which', 'my', 'all', "when's", 'the', "you'd", 'from', 'be', 'down', 'until', 'by', 'only', "we're",
-              "couldn't", 'your', 'her', 'should', 'but', 'at', 'having', 'ours', 'doing', "who's", 'during', "i've",
-              'those', 'as', 'myself', 'than', 'himself', "i'm", 'very', 'this', "we'd", 'them', 'ourselves', "doesn't",
-              'is', "we'll", "what's", 'had', 'there', "there's", 'a', 'yours', "he's", 'with', "you'll", 'these', 'does',
-              'into', 'not', "that's", "hadn't", "hasn't", "it's", 'she', "why's", 'me', 'against', 'yourselves', 'it',
-              "you're", "he'll", "here's", 'further', 'in', 'own', "i'll", "shouldn't", "they've", "aren't", 'do', 'itself',
-              "wasn't", 'then', "shan't", 'again', 'i', 'were', 'why', 'through', 'more', 'when', "where's", 'once', 'being',
-              'who', "she'll", 'under', 'no', "can't", 'other', "they'll", 'they', 'below', "won't", 'each', 'themselves',
-              'would', 'on', 'both', 'while', 'hers', 'herself', 'cannot', "she's", 'nor', 'over', 'where', 'you', "you've",
-              "how's", 'up', 'how', 'ought', "they'd", 'am', 'what', 'whom', 'above', "i'd", "let's", 'their', 'him', 'after',
-              'was', 'before', 'for', 'did', 'few', "we've", "she'd", 'to', 'because', 'an', 'and', 'he', 'same', 'theirs',
-              'yourself', 'too', "don't", 'could', "wouldn't", "mustn't", 'so', 'such', 'its', 'here', 'are', 'off', 'out',
-              "didn't", 'have', 'his', 'or', "isn't", 'that', 'of', 'our', 'we', 'has', 'if', 'between', 'most', 'some',
-              "they're", "weren't", 'about', 'any', "haven't", "he'd", 'been', 'product'])
+//   for (let i = 0; i < tags.length; i++) {
+// 	let splitTags = tags[i].split("_");
+// 	let tagSpace = splitTags.length > 1 ? splitTags[1] : splitTags[0];
+// 	//[skin , care]
+// 	let tagsSplitBySpace = tagSpace.split(" ").map(s => stemmer(s).toLowerCase());
 
-  for (let i = 0; i < tags.length; i++) {
-	let splitTags = tags[i].split("_");
-	let tagSpace = splitTags.length > 1 ? splitTags[1] : splitTags[0];
-	//[skin , care]
-	let tagsSplitBySpace = tagSpace.split(" ").map(s => stemmer(s).toLowerCase());
+// 	for(let tagSplit of tagsSplitBySpace)
+// 	{
+// 		if(!keywordToTagSplitBySpace[tagSplit])
+// 		{
+// 			keywordToTagSplitBySpace[tagSplit] = [];
+// 		}
+// 		keywordToTagSplitBySpace[tagSplit].push(tagsSplitBySpace)
 
-	for(let tagSplit of tagsSplitBySpace)
-	{
-		if(!keywordToTagSplitBySpace[tagSplit])
-		{
-			keywordToTagSplitBySpace[tagSplit] = [];
-		}
-		keywordToTagSplitBySpace[tagSplit].push(tagsSplitBySpace)
-
-	}
-	// map 1 {skin: [[skin, care]] , care: [[skin,care]]}
+// 	}
+// 	// map 1 {skin: [[skin, care]] , care: [[skin,care]]}
 	
-	if(!stemToReal[JSON.stringify(tagsSplitBySpace)])
-	{
-		stemToReal[JSON.stringify(tagsSplitBySpace)] = [];
-	}
-	stemToReal[JSON.stringify(tagsSplitBySpace)].push(tags[i]);
-	//map 2 [skin, care] : Type_Skin Care
-    // finalTagList[stemmer(splitTags.length > 1 ? splitTags[1] : tags[i]).toLowerCase()] = 0;
-    // stemToReal[stemmer(splitTags.length > 1 ? splitTags[1] : tags[i]).toLowerCase()] = tags[i];
-  }
-  console.log("keywords" );
-  console.log(keywordToTagSplitBySpace)
-  console.log("stem to real")
-  console.log(stemToReal)
-
-  let tagFrequency = {};
-  for (let i = 0; i < stemmedSource.length; i++) {
-    let lowerTag = stemmedSource[i].toLowerCase()
-    if (keywordToTagSplitBySpace[lowerTag] != undefined) {
-		if(!tagFrequency[lowerTag])
-		{
-			tagFrequency[lowerTag]  = 0;
-		}
-		if(!STOP_WORDS.has(lowerTag))
-		{
-			tagFrequency[lowerTag] += 1;
-
-		}
-      
-    }
-  }
-  console.log("tag freq")
-  let tagsToSend = [];
-  let sortedTagFreq = Object.keys(tagFrequency).map(function(key) {
-    return [keywordToTagSplitBySpace[key],tagFrequency[key]];
-  });
-  sortedTagFreq.sort(function(first, second) {
-    return second[1] - first[1];
-  });
-  console.log("tags freqas");
-  console.log(sortedTagFreq)
-  let allTagsScores = 0;
-  let currentTagMax  = 0;
-  let currentTagMaxIndex = 0;
-  let tagsToCompare = sortedTagFreq[0][0]
-
-  if(tagsToCompare.length == 1)
-  {
-	  tagsToSend = stemToReal[JSON.stringify(tagsToCompare[0])]
-	  
-  }else
-  {
-	for(let i = 0; i < tagsToCompare.length;i++)
-	{
-		allTagsScores = 0;
-		console.log(tagFrequency)
-		for( let k = 0 ; k < tagsToCompare[i].length; k++)
-		{
-			allTagsScores += tagFrequency[tagsToCompare[i][k]] ? tagFrequency[tagsToCompare[i][k]] : 0;
-			console.log( "BITCH "+ JSON.stringify(allTagsScores) + " "  + JSON.stringify(sortedTagFreq[0][0][i][k]))
-
-		}
-		if(allTagsScores > currentTagMax)
-		{
-			currentTagMax = allTagsScores;
-			currentTagMaxIndex = i;
-		}
-		console.log( "HOE "+ allTagsScores + " "  + JSON.stringify(sortedTagFreq[0][0][i]))
-	}
-	tagsToSend = stemToReal[JSON.stringify(tagsToCompare[currentTagMaxIndex])]
-	  
-  }
-  console.log("tags");
-  console.log(tagsToSend)
-
-
-  // Tag freq {skin: 12, care: 30}
-//   console.log(finalTagList);
-
-  
-//   let tagsToSend = [];
-//   let firstFive = items.slice(0, 1);
-//   for (let i = 0; i < firstFive.length; i++) {
-//     tagsToSend.push(firstFive[i][0]);
+// 	if(!stemToReal[JSON.stringify(tagsSplitBySpace)])
+// 	{
+// 		stemToReal[JSON.stringify(tagsSplitBySpace)] = [];
+// 	}
+// 	stemToReal[JSON.stringify(tagsSplitBySpace)].push(tags[i]);
+// 	//map 2 [skin, care] : Type_Skin Care
+//     // finalTagList[stemmer(splitTags.length > 1 ? splitTags[1] : tags[i]).toLowerCase()] = 0;
+//     // stemToReal[stemmer(splitTags.length > 1 ? splitTags[1] : tags[i]).toLowerCase()] = tags[i];
 //   }
-  console.log()
+//   console.log("keywords" );
+//   console.log(keywordToTagSplitBySpace)
+//   console.log("stem to real")
+//   console.log(stemToReal)
 
-  // Set up our HTTP request
-  var xhr = new XMLHttpRequest();
+//   let tagFrequency = {};
+//   for (let i = 0; i < stemmedSource.length; i++) {
+//     let lowerTag = stemmedSource[i].toLowerCase()
+//     if (keywordToTagSplitBySpace[lowerTag] != undefined) {
+// 		if(!tagFrequency[lowerTag])
+// 		{
+// 			tagFrequency[lowerTag]  = 0;
+// 		}
+// 		if(!STOP_WORDS.has(lowerTag))
+// 		{
+// 			tagFrequency[lowerTag] += 1;
 
-  // Setup our listener to process completed requests
-  xhr.onload = function () {
+// 		}
+      
+//     }
+//   }
+//   console.log("tag freq")
+//   let tagsToSend = [];
+//   let sortedTagFreq = Object.keys(tagFrequency).map(function(key) {
+//     return [keywordToTagSplitBySpace[key],tagFrequency[key]];
+//   });
+//   sortedTagFreq.sort(function(first, second) {
+//     return second[1] - first[1];
+//   });
+//   console.log("tags freqas");
+//   console.log(sortedTagFreq)
+//   let allTagsScores = 0;
+//   let currentTagMax  = 0;
+//   let currentTagMaxIndex = 0;
+//   let tagsToCompare = sortedTagFreq[0][0]
 
-      // Process our return data
-      if (xhr.status >= 200 && xhr.status < 300) {
-          // What do when the request is successful
-          let productList = JSON.parse(xhr.responseText);
-          let finalList = [];
-          for (let i = 0; i < productList.length; i++) {
-            finalList.push(productList[i])
-		  }
-		  console.log(finalList)
-          callback(finalList)
-      } else {
-          console.log("eoh")
-      }
+//   if(tagsToCompare.length == 1)
+//   {
+// 	  tagsToSend = stemToReal[JSON.stringify(tagsToCompare[0])]
+	  
+//   }else
+//   {
+// 	for(let i = 0; i < tagsToCompare.length;i++)
+// 	{
+// 		allTagsScores = 0;
+// 		console.log(tagFrequency)
+// 		for( let k = 0 ; k < tagsToCompare[i].length; k++)
+// 		{
+// 			allTagsScores += tagFrequency[tagsToCompare[i][k]] ? tagFrequency[tagsToCompare[i][k]] : 0;
+// 			console.log( "n "+ JSON.stringify(allTagsScores) + " "  + JSON.stringify(sortedTagFreq[0][0][i][k]))
 
-  };
-  // Create and send a GET request
-  // The first argument is the post type (GET, POST, PUT, DELETE, etc.)
-  // The second argument is the endpoint URL
-  xhr.open('POST', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/allProducts');
-  xhr.setRequestHeader("Content-type", "application/json");
-  xhr.send(JSON.stringify({tags: tagsToSend}));
-} 
+// 		}
+// 		if(allTagsScores > currentTagMax)
+// 		{
+// 			currentTagMax = allTagsScores;
+// 			currentTagMaxIndex = i;
+// 		}
+// 		console.log( "s "+ allTagsScores + " "  + JSON.stringify(sortedTagFreq[0][0][i]))
+// 	}
+// 	tagsToSend = stemToReal[JSON.stringify(tagsToCompare[currentTagMaxIndex])]
+	  
+//   }
+//   console.log("tags");
+//   console.log(tagsToSend)
 
-chrome.runtime.onMessage.addListener(function(request, sender) {
-  console.log(request.source);
-  console.log(request.stemmedSource);
-  getTags(data => stemTags(data["tags"], request.stemmedSource, data => getProductFigScores(data, data => getBars(data))))
+
+//   // Tag freq {skin: 12, care: 30}
+// //   console.log(finalTagList);
+
   
-  if (request.action == "getSource") {
-    // message.innerText = request.source;
-  }
+// //   let tagsToSend = [];
+// //   let firstFive = items.slice(0, 1);
+// //   for (let i = 0; i < firstFive.length; i++) {
+// //     tagsToSend.push(firstFive[i][0]);
+// //   }
+//   console.log()
+
+//   // Set up our HTTP request
+//   var xhr = new XMLHttpRequest();
+
+//   // Setup our listener to process completed requests
+//   xhr.onload = function () {
+
+//       // Process our return data
+//       if (xhr.status >= 200 && xhr.status < 300) {
+//           // What do when the request is successful
+//           let productList = JSON.parse(xhr.responseText);
+//           let finalList = [];
+//           for (let i = 0; i < productList.length; i++) {
+//             finalList.push(productList[i])
+// 		  }
+// 		  console.log(finalList)
+//           callback(finalList)
+//       } else {
+//           console.log("eoh")
+//       }
+
+//   };
+//   // Create and send a GET request
+//   // The first argument is the post type (GET, POST, PUT, DELETE, etc.)
+//   // The second argument is the endpoint URL
+//   xhr.open('POST', 'https://ethic-scoring-server.herokuapp.com/api/shopifyProduct/allProducts');
+//   xhr.setRequestHeader("Content-type", "application/json");
+//   xhr.send(JSON.stringify({tags: tagsToSend}));
+// } 
+chrome.storage.onChanged.addListener(function(changes, area) {
+    if ("product" in changes) {
+		for (const catKey of Object.keys(changes["product"].newValue.barList)) {
+			console.log(catKey)
+
+			if (changes["product"].newValue.barList[catKey] != 0) {
+				let myElement = document.getElementsByClassName(catKey + "-greenbar")[0];
+				myElement.style.width = 0;
+			}
+		}
+		console.log(changes["product"])
+        vendor.innerText = changes["product"].newValue.vendor;
+		productPrice.innerText = changes["product"].newValue.productPrice;
+		message.innerText = changes["product"].newValue.title;
+		for (const catKey of Object.keys(changes["product"].newValue.barList)) {
+			console.log(catKey)
+
+			if (changes["product"].newValue.barList[catKey] != 0) {
+				let myElement = document.getElementsByClassName(catKey + "-greenbar")[0];
+				myElement.style.width = changes["product"].newValue.barList[catKey];
+			}
+		}
+		url = changes["product"].newValue.url
+	}
+    
 });
 
 function onWindowLoad() {
@@ -561,15 +577,40 @@ function onWindowLoad() {
 	var productDescription = document.querySelector('#productDescription');
 	var productPrice = document.querySelector('#productPrice');
 	var myBtn = document.querySelector('#myBtn');
+	chrome.storage.sync.get(["product"], function(request) {
+		vendor.innerText = request.product.vendor;
+		productPrice.innerText = request.product.productPrice;
+		message.innerText = request.product.title;
+		console.log(request);
+		for (const catKey of Object.keys(request.product.barList)) {
+
+			if (request.product.barList[catKey] != 0) {
+				let myElement = document.getElementsByClassName(catKey + "-greenbar")[0];
+				myElement.style.width = request.product.barList[catKey];
+			}
+		}
+		url = request.product.url
+
+			// 				const doesNotApply = '<p style="font-size: 14px;font-weight:500;">This Category Does Not Apply To This Product</p>'
+			// 				if (styles.scores.possibleScore[catKey] == 0) {
+			// 				// TODO: Make this a NA somehow
+			// 				// $(doesNotApply).insertAfter(`.${catKey}-container p`)
+			// 				// $(`.${catKey}-container .score-progress-bar-normal`).css('display', 'none')
+			// 				// cnosole.log("ASDFASDFSDAF");
+			// 				} else {
+			// 					
+			// 					let numString = Math.floor(styles.scores.defaultScore[catKey] / styles.scores.possibleScore[catKey] * 100).toString() + "%";
+			// 				}
+	  });
   
-	chrome.tabs.executeScript(null, {
-	  file: "getPagesSourceBundle.js"
-	}, function() {
-	  // If you try and inject into an extensions page or the webstore/NTP you'll get an error
-	  if (chrome.runtime.lastError) {
-		message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-	  }
-	});
+	// chrome.tabs.executeScript(null, {
+	//   file: "getPagesSourceBundle.js"
+	// }, function() {
+	//   // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+	//   if (chrome.runtime.lastError) {
+	// 	message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+	//   }
+	// });
   
   }
   
