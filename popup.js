@@ -29,6 +29,8 @@ chrome.storage.onChanged.addListener(function(changes, area) {
 			}
 		}
 		url = changes["product"].newValue.url
+		picture.innerHTML = changes["product"].newValue.picture;
+
 	}
     
 });
@@ -56,6 +58,8 @@ function onWindowLoad() {
 			}
 		}
 		url = request.product.url
+		picture.innerHTML = request.product.picture;
+
 
 	  });
 

@@ -11,6 +11,7 @@
   "content_scripts": [{
     "matches":["https://*.amazon.com/*"],
     "js": ["getPagesSourceBundle.js"]
+
   }],
   "page_action": {
     "default_popup": "popup.html",

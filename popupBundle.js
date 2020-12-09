@@ -195,8 +195,8 @@ chrome.storage.onChanged.addListener(function(changes, area) {
 				myElement.style.width = changes["product"].newValue.barList[catKey];
 			}
 		}
-    url = changes["product"].newValue.url
-    picture.innerHTML = changes["product"].newValue.picture;
+		url = changes["product"].newValue.url
+		picture.innerHTML = changes["product"].newValue.picture;
 
 	}
     
@@ -224,8 +224,9 @@ function onWindowLoad() {
 				myElement.style.width = request.product.barList[catKey];
 			}
 		}
-    url = request.product.url
-    picture.innerHTML = request.product.picture;
+		url = request.product.url
+		picture.innerHTML = request.product.picture;
+
 
 	  });
 
