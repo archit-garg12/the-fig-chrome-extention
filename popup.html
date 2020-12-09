@@ -2,7 +2,7 @@
 <style>
 html {
   width:550px; 
-  height: 400px;
+  height: 350px;
   background-color: #0c5740; 
 }
 
@@ -29,11 +29,12 @@ html {
 }
 
 .productTagDiv{
-  width: 200px;
-  height: 500px;
+  width: 250px;
+  height: 350px;
   float: right; 
   margin-top: 5%;
-  margin-left: 50px;
+  margin-left: -100px;
+  display: inline-block;
 }
 
 .productTags{
@@ -52,18 +53,31 @@ html {
 
 button {
   /*margin-top: 100px;*/
-  width: 150px; 
+  margin-top: 25px;
+  width: 440px; 
   height: 50px; 
-  border-radius: 5px;
+  border-radius: 20px;
   line-height: 50px;
   text-align: center;
   color: white;
   background-color: #0c5740;
   font-size: 24px;
+
 }
 
 a {
   font-size: 12px;
+}
+img {
+  border-radius: 50%;
+  width: 195px;
+  height: 195px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-51%, -50%);
+
+  /*vertical-align: center;*/
 }
 
 .circle {
@@ -72,9 +86,12 @@ a {
   margin-left: 10%;
   width:200px; 
   height:200px; 
+  line-height: 200px;
   background-color: #0c5740; 
   display: inline-block; 
   float: left;
+  text-align: center;
+  vertical-align: center;
 }
 
 .productName {
@@ -83,6 +100,10 @@ a {
   margin-top: 10px;
   margin-bottom: -8px;
   padding-left: 10px;
+  width: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .productPrice {
@@ -200,6 +221,15 @@ a {
   margin-right: 500%;
 }
 
+.breakdown {
+  width: 200px;
+}
+
+.columnRight {
+  margin-top: 30px;
+  margin-left: 25px;
+}
+
 
 </style>
 <html>
@@ -217,31 +247,11 @@ a {
   </div>
   <div class="productBody">
     <div class="column">
-    <div class = "circle">
-    </div>
+      <div id="picture" class = "circle">
+      </div>
     <div class="column">
       <div class="center-block">
-        <div class="score-detail labor-container">
-          <p class="score-label">Labor Rights</p>
-          <div class="score-progress-bar-normal">
-            <div class="score-progress-bar labor-greenbar"></div>
-          </div>
-        </div>
-        <div class="score-detail all_n-container">
-          <p class="score-label">Product Composition</p>
-          <div class="score-progress-bar-normal">
-            <div class="score-progress-bar all_n-greenbar"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-   
-    </div>
-    <div class="productTagDiv">
-      <!-- <div class="about-this-product-breakdown"> -->
-        <div>
-        <h5>
+        <h5 class="breakdown">
           FIG Value Breakdown
         </h5>
         <div class="score-breakdown-container">
@@ -260,7 +270,18 @@ a {
               </div>
             </div>
           </div>
-          <br/>
+          <button id="myButton" type="button">FIG IT</button>
+
+        
+        </div>
+      </div>
+    
+   
+      </div>
+    </div>
+    <div class="productTagDiv">
+        <div class="columnRight">
+
           <div class="score-detail eco_f-container">
             <p class="score-label">Environmental Impact</p>
             <div class="score-progress-bar-normal">
@@ -274,30 +295,31 @@ a {
               <div class="score-progress-bar co_im-greenbar"></div>
             </div>
           </div>
+
           <div class="score-detail an_ri-container">
             <p class="score-label">Animal Rights</p>
             <div class="score-progress-bar-normal">
               <div class="score-progress-bar an_ri-greenbar"></div>
             </div>
           </div>
+
+          <div class="score-detail labor-container">
+            <p class="score-label">Labor Rights</p>
+            <div class="score-progress-bar-normal">
+              <div class="score-progress-bar labor-greenbar"></div>
+            </div>
+          </div>
+
+          <div class="score-detail all_n-container">
+            <p class="score-label">Product Composition</p>
+            <div class="score-progress-bar-normal">
+              <div class="score-progress-bar all_n-greenbar"></div>
+            </div>
+          </div>
+
         </div>
        
       </div>
-      
-      <div class="center">
-        <button id="myButton" type="button">FIG IT</button>
-  
-      </div>
-      <!-- <div class = "productTags">
-        <p>Fair Trade</p>
-      </div>
-      <div class = "productTags">
-        <p>Plastic Free</p>
-      </div> -->
-      
-      <!-- <div class = "alignA">
-        <a target="_blank" href="https://www.linkedin.com/in/krish-avvari-41769a169/">Click for More!</a>
-      </div> -->
     </div>
     
   </div>

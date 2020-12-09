@@ -114,6 +114,8 @@ function getProductFigScores(products, callback)
 				console.log(url);
 				vendor.innerText = "Sold By: " + product["vendor"];
 				productPrice.innerText = "Price: $" + product["variants"][0]["price"];
+				let imgURL = product["image"]["src"];
+				picture.innerHTML = "<img src=\"" + imgURL + "\">";
 				callback(product["id"].toString());
 				
 			      
@@ -123,6 +125,7 @@ function getProductFigScores(products, callback)
 				vendor.innerText = "";
 			}
 			// console.log(products[parseInt(items[0][0])]);
+			console.log("archie");
 			console.log(product);
 
 		} else {
@@ -394,6 +397,7 @@ function onWindowLoad() {
 	var productDescription = document.querySelector('#productDescription');
 	var productPrice = document.querySelector('#productPrice');
 	var myBtn = document.querySelector('#myBtn');
+	var picture = document.querySelector('#picture');
   
 	chrome.tabs.executeScript(null, {
 	  file: "getPagesSourceBundle.js"
