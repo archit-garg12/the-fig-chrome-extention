@@ -1,9 +1,15 @@
-// @author Rob W <http://stackoverflow.com/users/938089/rob-w>
-// Demo: var serialized_html = DOMtoString(document);
+// Porter stemmer in Javascript. Few comments, but it's easy to follow against the rules in the original
+// paper, in
+//
+//  Porter, 1980, An algorithm for suffix stripping, Program, Vol. 14,
+//  no. 3, pp 130-137,
+//
+// see also http://www.tartarus.org/~martin/PorterStemmer
 
-// import stemmer from './stemmer.js';
+// Release 1 be 'andargor', Jul 2004
+// Release 2 (substantially revised) by Christopher McKenzie, Aug 2009
 
-var stemmer = (function(){
+export var stemmer = (function(){
 	var step2list = {
 			"ational" : "ate",
 			"tional" : "tion",
@@ -178,66 +184,3 @@ var stemmer = (function(){
 		return w;
 	}
 })();
-
-function DOMtoString(document_root) {
-    // var btn = document.createElement("BUTTON")
-    // var t = document.createTextNode("CLICK ME");
-    // btn.appendChild(t);
-    // //Appending to DOM 
-    // document.body.appendChild(btn);
-    let html = document.documentElement.innerHTML
-    // return html;
-    // var html = '',
-    // node = document_root.firstChild;
-    // while (node) {
-    //     switch (node.nodeType) {
-    //     case Node.ELEMENT_NODE:
-    //         html += node.outerHTML;
-    //         break;
-    //     case Node.TEXT_NODE:
-    //         html += node.nodeValue;
-    //         break;
-    //     case Node.CDATA_SECTION_NODE:
-    //         html += '<![CDATA[' + node.nodeValue + ']]>';
-    //         break;
-    //     case Node.COMMENT_NODE:
-    //         html += '<!--' + node.nodeValue + '-->';
-    //         break;
-    //     case Node.DOCUMENT_TYPE_NODE:
-    //         // (X)HTML documents are identified by public identifiers
-    //         html += "<!DOCTYPE " + node.name + (node.publicId ? ' PUBLIC "' + node.publicId + '"' : '') + (!node.publicId && node.systemId ? ' SYSTEM' : '') + (node.systemId ? ' "' + node.systemId + '"' : '') + '>\n';
-    //         break;
-    //     }
-    //     node = node.nextSibling;
-    // }
-    return html;
-}
-
-function stemTags(tags) {
-    let finalTagList = [];
-    for (let i = 0; i < tags.length; i++) {
-        finalTagList.push(stemmer(tags[i]));
-    }
-    return finalTagList;
-}
-
-function stemming(html) {
-    let x = html.split(' ')
-    let final = [];
-    for (let i = 0; i < x.length; i++) {
-        let y = stemmer(x[i]);
-        if (y.localeCompare('')) {
-            final.push(stemmer(x[i]));
-        }
-    }
-
-    return final;
-}
-
-
-chrome.runtime.sendMessage({
-    action: "getSource",
-    source: DOMtoString(document),
-    stemmedSource: stemming(DOMtoString(document)),
-    // tagList: getTags(),
-});

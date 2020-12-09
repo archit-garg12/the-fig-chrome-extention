@@ -20,7 +20,7 @@ html {
 .productBody {
   margin-top: 5px; 
   width:535px; 
-  height:680px; 
+  height:480px; 
   background-color: white; 
   display: block; 
   margin-left: auto; 
@@ -51,7 +51,7 @@ html {
 }
 
 button {
-  /*margin-top: 100px;*/
+  margin-top: 100px;
   width: 150px; 
   height: 50px; 
   border-radius: 5px;
@@ -99,98 +99,21 @@ a {
   margin-left: 35px;
   margin-top: 3px;
 }
-.score-detail {
-  font-size: 12px;
-  font-weight: 550;
-  margin: 20px 0 20px 0;
-}
-.score-detail p {
-  margin-bottom: 10px;
-}
-.avg-container .score-label {
-  font-weight: 700;
-}
-.score-progress-bar-normal {
-  position: relative;
-  width: max(175px, calc(100% - 75px));
-  border-radius: 20px;
-  background-color: #f8f8f8;
-  height: 15px;
-}
-.avg-score-progress-bar-normal {
-  background-color: lightgray; 
-}
-.score-progress-bar {
-  height: 15px;
-  background-color: #7d998e;
-  border-radius: 20px;
-  width: 0px;
-  max-width: 100%;
-  transition: width .5s ease;
-}
-.avg-greenbar {
-  background-color: #095540;
-}
-.avg-container .score-label {
-  font-weight: 700;
-}
-.description-greenbar{ 
-  width: 375px;
-}
-.vert-div-strikethrough {
-  position: absolute;
-  height: 28px;
-  border-right: 2px solid black;
-  width: 0px;
-  top:  -7px;
-  display: flex;
-  justify-content: center;
-}
-.vert-div-strikethrough p {
-  position: absolute;
-  top: 10px;
-}
-.vert-div-strikethrough .reverse-tl {
-  top: -40px;
-}
-.description-good {
-  left: calc(100% * .22);
-}
-.description-great {
-  left: calc(100% * .55);
-}
-.description-awesome {
-  left: calc(100% * .7);
-}
-.score-breakdown-container {
-  width: 100px;
+
+
+<script>
+
+function myFunction(){
+  console.log("asdfsadf");
 }
 
-.eco_f-greenbar {
-  
-}
-
-.labor-greenbar {
-  
-}
-
-.all-n-greenbar {
-  
-}
-
-.am-ri-greenbar {
-  
-}
-
-.co-im-greenbar {
-
-}
+</style>
 
 </style>
 <html>
 <head>
 
-<script src='popupBundle.js' type='module'></script>
+<script src='popup.js' type='module'></script>
 </head>
 
 <body>
@@ -203,71 +126,19 @@ a {
   <div class="productBody">
     <div class = "circle"></div>
     <div class="productTagDiv">
-      <!-- <div class="about-this-product-breakdown"> -->
-        <div>
-        <h5>
-          FIG Value Breakdown
-        </h5>
-        <div class="score-breakdown-container">
-          <div class="score-detail avg-container">
-            <p class="score-label">Overall FIG Value</p>
-            <div class="score-progress-bar-normal avg-score-progress-bar-normal" id="avg-normal">
-              <div class="score-progress-bar avg-greenbar"></div>
-              <div class="vert-div-strikethrough description-good">
-                <p>Good</p>
-              </div>
-              <div class="vert-div-strikethrough description-great">
-                <p class="reverse-tl">Great</p>
-              </div>
-              <div class="vert-div-strikethrough description-awesome">
-                <p>Awesome</p>
-              </div>
-            </div>
-          </div>
-          <br/>
-          <div class="score-detail eco_f-container">
-            <p class="score-label">Environmental Impact</p>
-            <div class="score-progress-bar-normal">
-              <div class="score-progress-bar eco_f-greenbar"></div>
-            </div>
-          </div>
-          <div class="score-detail labor-container">
-            <p class="score-label">Labor Rights</p>
-            <div class="score-progress-bar-normal">
-              <div class="score-progress-bar labor-greenbar"></div>
-            </div>
-          </div>
-          <div class="score-detail all_n-container">
-            <p class="score-label">Product Composition</p>
-            <div class="score-progress-bar-normal">
-              <div class="score-progress-bar all_n-greenbar"></div>
-            </div>
-          </div>
-          <div class="score-detail co_im-container">
-            <p class="score-label">Community Impact</p>
-            <div class="score-progress-bar-normal">
-              <div class="score-progress-bar co_im-greenbar"></div>
-            </div>
-          </div>
-          <div class="score-detail an_ri-container">
-            <p class="score-label">Animal Rights</p>
-            <div class="score-progress-bar-normal">
-              <div class="score-progress-bar an_ri-greenbar"></div>
-            </div>
-          </div>
-        </div>
+      <div class = "productTags">
+        <p id = "productScore"/>
       </div>
-
-      <!-- <div class = "productTags">
+      <div class = "productTags">
         <p>Fair Trade</p>
       </div>
       <div class = "productTags">
         <p>Plastic Free</p>
-      </div> -->
-      <button id="myButton" type="button">FIG IT</button>
-      <!-- <div class = "alignA">
+      </div>
+      <button onclick="button">FIG IT</button>
+      <div class = "alignA">
         <a target="_blank" href="https://www.linkedin.com/in/krish-avvari-41769a169/">Click for More!</a>
-      </div> -->
+      </div>
     </div>
 
   </div>
