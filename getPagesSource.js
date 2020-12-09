@@ -7,6 +7,7 @@ let vendor = "";
 let productPrice = "";
 let title = "";
 let url = "";
+let picture = "";
 
 function DOMtoString(document_root) {
 	const $ = cheerio.load(document.documentElement.innerHTML)
@@ -113,7 +114,9 @@ function getProductFigScores(products, callback)
 				url = "https://thefutureisgood.co/products/" + product["handle"];
 				console.log(url);
 				vendor = "Sold By: " + product["vendor"];
-				productPrice = "Price: $" + product["variants"][0]["price"];
+                productPrice = "Price: $" + product["variants"][0]["price"];
+                let imgURL = product["image"]["src"];
+                picture = `<img src="${imgURL}">`;
 				callback(product["id"].toString());
 				
 			      
@@ -278,7 +281,8 @@ chrome.storage.sync.set({"product":{
     productPrice: "",
     title: "",
     url: "",
-    barList: ""
+    barList: "",
+    picture:""
 
 }},getTags(tags => 
         {
@@ -289,7 +293,8 @@ chrome.storage.sync.set({"product":{
                         productPrice: productPrice,
                         title: title,
                         url: url,
-                        barList: barLists
+                        barList: barLists,
+                        picture:picture
 
                     }}, function() {
                         console.log('Value is set to');
